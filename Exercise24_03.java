@@ -84,7 +84,6 @@ interface MyList<E> extends java.util.Collection<E> {
 
  @Override
  public default boolean removeAll(Collection<?> c) {
-   // Left as an exercise
    return true;
  }
 
