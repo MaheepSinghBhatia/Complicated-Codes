@@ -1,4 +1,3 @@
-// Look for WRITE YOUR CODE to write your code
 import java.util.*;
 
 public class Exercise24_01 {
@@ -78,34 +77,26 @@ public class Exercise24_01 {
 class MyArrayList<E> implements MyList<E> {
     public static final int INITIAL_CAPACITY = 16;
     private E[] data = (E[])new Object[INITIAL_CAPACITY];
-    private int size = 0; // Number of elements in the list
+    private int size = 0;
 
-    /** Create an empty list */
     public MyArrayList() {
     }
 
-    /** Create a list from an array of objects */
     public MyArrayList(E[] objects) {
       for (int i = 0; i < objects.length; i++)
-        add(objects[i]); // Warning: don't use super(objects)! 
+        add(objects[i]);
     }
 
-    @Override /** Add a new element at the specified index */
+    @Override
     public void add(int index, E e) {   
       ensureCapacity();
-
-      // Move the elements to the right after the specified index
       for (int i = size - 1; i >= index; i--)
         data[i + 1] = data[i];
 
-      // Insert new element to data[index]
       data[index] = e;
-
-      // Increase size by 1
       size++;
     }
 
-    /** Create a new larger array, double the current size + 1 */
     private void ensureCapacity() {
       if (size >= data.length) {
         E[] newData = (E[])(new Object[size * 2 + 1]);
@@ -114,13 +105,13 @@ class MyArrayList<E> implements MyList<E> {
       }
     }
 
-    @Override /** Clear the list */
+    @Override
     public void clear() {
       data = (E[])new Object[INITIAL_CAPACITY];
       size = 0;
     }
 
-    @Override /** Return true if this list contains the element */
+    @Override
     public boolean contains(Object e) {
       for (int i = 0; i < size; i++)
         if (e.equals(data[i])) return true;
@@ -128,7 +119,7 @@ class MyArrayList<E> implements MyList<E> {
       return false;
     }
 
-    @Override /** Return the element at the specified index */
+    @Override
     public E get(int index) {
       checkIndex(index);
       return data[index];
@@ -140,8 +131,7 @@ class MyArrayList<E> implements MyList<E> {
           ("Index: " + index + ", Size: " + size);
     }
     
-    @Override /** Return the index of the first matching element 
-     *  in this list. Return -1 if no match. */
+    @Override
     public int indexOf(Object e) {
       for (int i = 0; i < size; i++)
         if (e.equals(data[i])) return i;
@@ -149,8 +139,7 @@ class MyArrayList<E> implements MyList<E> {
       return -1;
     }
 
-    @Override /** Return the index of the last matching element 
-     *  in this list. Return -1 if no match. */
+    @Override
     public int lastIndexOf(E e) {
       for (int i = size - 1; i >= 0; i--)
         if (e.equals(data[i])) return i;
@@ -158,28 +147,21 @@ class MyArrayList<E> implements MyList<E> {
       return -1;
     }
 
-    @Override /** Remove the element at the specified position 
-     *  in this list. Shift any subsequent elements to the left.
-     *  Return the element that was removed from the list. */
+    @Override
     public E remove(int index) {
       checkIndex(index);
       
       E e = data[index];
 
-      // Shift data to the left
       for (int j = index; j < size - 1; j++)
         data[j] = data[j + 1];
 
-      data[size - 1] = null; // This element is now null
-
-      // Decrement size
+      data[size - 1] = null;
       size--;
-
       return e;
     }
 
-    @Override /** Replace the element at the specified position 
-     *  in this list with the specified element. */
+    @Override
     public E set(int index, E e) {
       checkIndex(index);
       E old = data[index];
@@ -199,23 +181,22 @@ class MyArrayList<E> implements MyList<E> {
       return result.toString() + "]";
     }
 
-    /** Trims the capacity to current size */
     public void trimToSize() {
       if (size != data.length) { 
         E[] newData = (E[])(new Object[size]);
         System.arraycopy(data, 0, newData, 0, size);
         data = newData;
-      } // If size == capacity, no need to trim
+      }
     }
 
-    @Override /** Override iterator() defined in Iterable */
+    @Override
     public java.util.Iterator<E> iterator() {
       return new ArrayListIterator();
     }
    
     private class ArrayListIterator 
         implements java.util.Iterator<E> {
-      private int current = 0; // Current index 
+      private int current = 0;
 
       @Override
       public boolean hasNext() {
@@ -229,56 +210,43 @@ class MyArrayList<E> implements MyList<E> {
 
       @Override
       public void remove() {
-        if (current == 0) // next() has not been called yet
+        if (current == 0)
           throw new IllegalStateException(); 
         MyArrayList.this.remove(--current);
       }
     }
     
-    @Override /** Return the number of elements in this list */
+    @Override
     public int size() {
       return size;
     }
 }
 
 interface MyList<E> extends java.util.Collection<E> {
-    /** Add a new element at the specified index in this list */
     public void add(int index, E e);
 
-    /** Return the element from this list at the specified index */
     public E get(int index);
 
-    /** Return the index of the first matching element in this list.
-     *  Return -1 if no match. */
     public int indexOf(Object e);
 
-    /** Return the index of the last matching element in this list
-     *  Return -1 if no match. */
     public int lastIndexOf(E e);
 
-    /** Remove the element at the specified position in this list
-     *  Shift any subsequent elements to the left.
-     *  Return the element that was removed from the list. */
     public E remove(int index);
-
-    /** Replace the element at the specified position in this list
-     *  with the specified element and returns the new set. */
+  
     public E set(int index, E e);
     
-    @Override /** Add a new element at the end of this list */
+    @Override
     public default boolean add(E e) {
       add(size(), e);
       return true;
     }
 
-    @Override /** Return true if this list contains no elements */
+    @Override
     public default boolean isEmpty() {
       return size() == 0;
     }
 
-    @Override /** Remove the first occurrence of the element e 
-     *  from this list. Shift any subsequent elements to the left.
-     *  Return true if the element is removed. */
+    @Override
     public default boolean remove(Object e) {
       if (indexOf(e) >= 0) {
         remove(indexOf(e));
@@ -296,9 +264,7 @@ interface MyList<E> extends java.util.Collection<E> {
       
       return true;
     }
-    
-    /** Adds the elements in otherList to this list.
-     * Returns true if this list changed as a result of the call */
+
     @Override
     public default boolean addAll(Collection<? extends E> c) {
       for (E e: c)
@@ -306,9 +272,7 @@ interface MyList<E> extends java.util.Collection<E> {
       
       return c.size() > 0;
     }
-  
-    /** Removes all the elements in otherList from this list 
-      * Returns true if this list changed as a result of the call */
+
     @Override
     public default boolean removeAll(Collection<?> c) {
       boolean changed = false;
@@ -319,9 +283,7 @@ interface MyList<E> extends java.util.Collection<E> {
         
       return changed;
     }  
-    
-    /** Retains the elements in this list that are also in otherList 
-      * Returns true if this list changed as a result of the call */
+
     @Override
     public default boolean retainAll(Collection<?> c) {
       boolean changed = false;
